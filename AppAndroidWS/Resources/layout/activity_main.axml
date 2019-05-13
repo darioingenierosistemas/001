@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+	android:background="@android:color/holo_blue_light"
+	>
+
+	<ImageView 
+	 	 android:src="@drawable/GYG_APP"
+		 android:layout_marginTop="20dp"
+		 android:layout_width="400dp"
+         android:layout_height="120dp"
+	     android:padding="5dp"/>
+
+	<LinearLayout
+		android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="10dp"
+        android:orientation="vertical"
+		>
+		<EditText
+		android:id="@+id/edtUser"
+		android:hint="USER"
+		android:textColor ="@android:color/black"
+		android:background="@drawable/back"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:padding="5dp"
+	    android:layout_marginTop="10dp"
+		/>
+
+		<EditText
+		android:id="@+id/edtPass"
+		android:hint="PASSWORD"
+		android:textColor ="@android:color/black"
+		android:background="@drawable/back"
+		android:inputType="textPassword"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:padding="5dp"
+	    android:layout_marginTop="10dp" />
+
+		<Button
+		android:id="@+id/btnLogin"
+		android:text="LOGIN" 
+		android:layout_width="match_parent"
+        android:layout_height="45dp"
+		android:background="@color/colorPrimary"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="right" />
+
+		<Button
+		android:id="@+id/btnSincronizar"
+		android:text="Sincronizar" 
+        android:layout_width="match_parent"
+		android:layout_height="45dp"
+		android:layout_marginTop="40dp"
+	    android:background="@color/material_grey_900"
+        android:textColor="@android:color/white"
+        android:layout_gravity="right" />
+
+			<Esri.ArcGISRuntime.UI.Controls.MapView android:id="@+id/mapprueba"
+				 android:layout_width ="fill_parent" android:layout_height="fill_parent" 
+		 >
+		</Esri.ArcGISRuntime.UI.Controls.MapView>
+	</LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+	android:background="@android:color/holo_blue_light"
+    android:orientation="vertical" >
+
+                  <LinearLayout
+                    android:id="@+id/tabConsulta"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="vertical">
+
+					<EditText
+					android:id="@+id/edtTapSIG"
+					android:hint="Identificador SIG"
+					android:inputType="phone"
+					android:textColor ="@android:color/black"
+					android:background="@drawable/back"
+					android:layout_width="fill_parent"
+					android:layout_height="45dp"
+					android:padding="5dp"
+					android:layout_marginTop="10dp" />
+
+					<EditText
+					android:id="@+id/edtTapOSF"
+					android:hint="Codigo OSF"
+					android:textColor ="@android:color/black"
+					android:background="@drawable/back"
+					android:layout_width="fill_parent"
+					android:layout_height="45dp"
+					android:padding="5dp"
+					android:layout_marginTop="10dp" />
+
+					<Button
+					android:id="@+id/btnConsultarTap"
+					android:text="CONSULTAR TAP" 
+					android:layout_width="match_parent"
+					android:background="@color/colorPrimary"
+					android:textColor="@android:color/white"
+					android:layout_height="60dp"
+					android:padding="5dp"
+					android:layout_marginTop="10dp"
+					android:layout_gravity="right" />
+					
+					<ListView
+					android:minWidth="4px"
+					android:minHeight="4px"
+			        android:padding="5dp"
+					android:layout_width="match_parent"
+					android:layout_height ="310dp"
+					android:background="@color/material_grey_50"
+					android:id="@+id/ListTapInfo"
+					android:visibility="invisible"
+					/>
+			
+					<Button
+					android:id="@+id/btnActualizarTapConsulta"
+					android:text="Actualizar TAP" 
+					android:layout_width="match_parent"
+					android:background="@color/error_color_material"
+					android:textColor="@android:color/white"
+					android:layout_height="45dp"
+					android:padding="5dp"
+					android:layout_gravity="right"
+			        android:enabled="false"
+					android:visibility="invisible"
+			        />
+		
+				
+                </LinearLayout>
+	
+</LinearLayout>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+	android:background="@android:color/holo_blue_light"
+    android:orientation="vertical" >
+
+	<TextView
+		android:text="TIPO ACTUAL"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="10dp"
+		android:textColor ="@android:color/black"
+		android:background="@drawable/back"
+		android:id="@+id/txtTipo" />
+
+	<EditText
+		android:id="@+id/edtTipo"
+		android:hint="Tipo Actual"
+		android:textColor ="@android:color/black"
+		android:background="@drawable/back"
+		android:layout_width="fill_parent"
+		android:layout_height="45dp"
+		android:padding="5dp"
+		android:layout_marginTop="10dp"
+		android:enabled="false" />
+
+		<Spinner
+		android:id="@+id/spiTipo"
+	    android:layout_width="fill_parent"
+		android:layout_height="50dp"
+		android:padding="5dp"
+		android:layout_marginTop="10dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"/>
+	   
+		<TextView
+		android:text="FABRICANTE ACTUAL"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="10dp"
+		android:textColor ="@android:color/black"
+		android:background="@drawable/back"
+		android:id="@+id/txtFabricante" />
+
+	<EditText
+		android:id="@+id/edtFabricante"
+		android:hint="Fabricante"
+		android:textColor ="@android:color/black"
+		android:background="@drawable/back"
+		android:layout_width="fill_parent"
+		android:layout_height="45dp"
+		android:padding="5dp"
+		android:layout_marginTop="10dp"
+		android:enabled="false" />
+
+	
+	<Spinner
+		android:id="@+id/spiFab"
+	    android:layout_width="fill_parent"
+		android:layout_height="50dp"
+		android:padding="5dp"
+		android:layout_marginTop="10dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"/>
+
+		<TextView
+		android:text="MODELO ACTUAL"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="10dp"
+		android:textColor ="@android:color/black"
+		android:background="@drawable/back"
+		android:id="@+id/txtModulo" />
+
+	<EditText
+		android:id="@+id/edtModelo"
+		android:hint="Modelo"
+		android:textColor ="@android:color/black"
+		android:background="@drawable/back"
+		android:layout_width="fill_parent"
+		android:layout_height="45dp"
+		android:padding="5dp"
+		android:layout_marginTop="10dp"
+		android:enabled="false" />
+
+
+
+
+	<Spinner
+		android:id="@+id/spiModelo"
+	    android:layout_width="fill_parent"
+		android:layout_height="50dp"
+		android:padding="5dp"
+		android:layout_marginTop="10dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"/>
+
+	<Button
+		android:id="@+id/btnActualizarTap"
+		android:text="ACTUALIZAR TAP" 
+		android:layout_width="match_parent"
+	    android:background="@color/colorPrimary"
+        android:textColor="@android:color/white"
+        android:layout_height="60dp"
+		android:padding="10dp"
+        android:layout_gravity="right" />
+
+</LinearLayout>
