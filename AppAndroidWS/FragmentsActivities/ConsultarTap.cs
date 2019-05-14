@@ -38,6 +38,7 @@ namespace une_etp.FragmentsActivities
         private double x;
         private double y;
         private int reference;
+        private string tipo;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -56,6 +57,7 @@ namespace une_etp.FragmentsActivities
             tapByMap = Intent.GetStringExtra("codigoTag");
             x = Intent.GetDoubleExtra("x",0);
             y = Intent.GetDoubleExtra("y",0);
+            tipo = Intent.GetStringExtra("tipo");
             reference = Intent.GetIntExtra("reference", 0);
             if ( null != tapByMap && !tapByMap.Equals(string.Empty))
             {

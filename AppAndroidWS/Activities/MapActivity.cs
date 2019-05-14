@@ -189,28 +189,10 @@ namespace une_etp.Activities
                     geometry.Y + mapTolerance, mapView.Map.SpatialReference); 
                 var queryParams = new QueryParameters();         
                 queryParams.Geometry = selectionEnvelope;
-                FeatureQueryResult result = await _featureLayer.SelectFeaturesAsync(queryParams, SelectionMode.New);
-                if(null != result)
-                {
-                    IEnumerator<Feature> enumerator = result.GetEnumerator();
-                    if (null != enumerator)
-                    {
-                        while (enumerator.MoveNext())
-                        {
-                            Feature item = enumerator.Current;
-                            MapPoint projectedLocation = (MapPoint)item.Geometry;           
-                            var tag = item.Attributes["TAG"];
-                            var intent = new Intent(this, typeof(ConsultarTap));
-                            intent.PutExtra("codigoTag", tag.ToString());
-                            intent.PutExtra("x", projectedLocation.X);
-                            intent.PutExtra("y", projectedLocation.Y);
-                            intent.PutExtra("reference", projectedLocation.SpatialReference.Wkid);     
-                            StartActivity(intent);
-                        }
-                    }
-                }
-
-                 await featureLayerCableCoaxial.SelectFeaturesAsync(queryParams, SelectionMode.New);
+                SelectTagByTypoAsync(_featureLayer, "TAP", queryParams);
+                SelectTagByTypoAsync(featureLayerNAP, "NAP", queryParams);
+                SelectTagByTypoAsync(featureLayerMDU, "MDU", queryParams);
+                await featureLayerCableCoaxial.SelectFeaturesAsync(queryParams, SelectionMode.New);
 
             }
             catch (Exception ex)
@@ -219,6 +201,40 @@ namespace une_etp.Activities
                 GenerateAlertError("Error buscando el tap");
             }
         }
+
+        private async void SelectTagByTypoAsync(FeatureLayer featureLayer, string tipo, QueryParameters queryParams)
+        {
+            try
+            {
+                FeatureQueryResult result = await featureLayer.SelectFeaturesAsync(queryParams, SelectionMode.New);
+                if (null != result)
+                {
+                    IEnumerator<Feature> enumerator = result.GetEnumerator();
+                    if (null != enumerator)
+                    {
+                        while (enumerator.MoveNext())
+                        {
+                            Feature item = enumerator.Current;
+                            MapPoint projectedLocation = (MapPoint)item.Geometry;
+                            var tag = item.Attributes["TAG"];
+                            var intent = new Intent(this, typeof(ConsultarTap));
+                            intent.PutExtra("codigoTag", tag.ToString());
+                            intent.PutExtra("x", projectedLocation.X);
+                            intent.PutExtra("y", projectedLocation.Y);
+                            intent.PutExtra("reference", projectedLocation.SpatialReference.Wkid);
+                            intent.PutExtra("tipo", tipo);
+                            StartActivity(intent);
+                        }
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                Log.Info("Error", ex.Message);
+                GenerateAlertError("No tiene Tag");
+            }
+        }
+
 
         private void FindTagByPosition(Android.Graphics.PointF position)
         {
