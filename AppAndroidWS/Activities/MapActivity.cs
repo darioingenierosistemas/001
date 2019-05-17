@@ -83,7 +83,7 @@ namespace une_etp.Activities
                 FillCableCoaxialAsync();
                 FillMDU();
                 //FillAcoplador();
-                //await SetInitialPointAsync();
+                await SetInitialPointAsync();
 
 
             }
@@ -100,7 +100,7 @@ namespace une_etp.Activities
 
         private async void FillCableCoaxialAsync()
         {
-            Uri cableCoaxial = new Uri("http://arcgis.etp.com.co:8399/arcgis/rest/services/sigetp/coaxial/FeatureServer/9");
+            Uri cableCoaxial = new Uri("http://arcgis.etp.com.co:8399/arcgis/rest/services/sigetp/coaxial/FeatureServer/10");
             var featureTableCableCoaxial = new ServiceFeatureTable(cableCoaxial);
             featureLayerCableCoaxial = new FeatureLayer(featureTableCableCoaxial);
             await featureLayerCableCoaxial.LoadAsync();
@@ -171,10 +171,10 @@ namespace une_etp.Activities
         private async Task FillPointCenterAsync(double x , double y , SpatialReference spatialReference)
         {
             MapPoint centralPoint = new MapPoint(x,y, spatialReference);
-            mapView.LocationDisplay.InitialZoomScale = 1200;
-            Viewpoint startingViewpoint = new Viewpoint(centralPoint,1200);
+            mapView.LocationDisplay.InitialZoomScale = 1100;
+            Viewpoint startingViewpoint = new Viewpoint(centralPoint, 1100);
             mapView.Map.InitialViewpoint = startingViewpoint;
-            await mapView.SetViewpointCenterAsync(centralPoint, 1200);
+            await mapView.SetViewpointCenterAsync(centralPoint, 1100);
         }
 
         private async void MapView_GeoViewTappedAsync(object sender, GeoViewInputEventArgs e)
