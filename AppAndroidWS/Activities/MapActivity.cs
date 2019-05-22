@@ -12,6 +12,7 @@ using Android.Support.V7.App;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
+using Android.Support.Design.Widget;
 using Esri.ArcGISRuntime.Data;
 using Esri.ArcGISRuntime.Geometry;
 using Esri.ArcGISRuntime.Location;
@@ -31,13 +32,16 @@ namespace une_etp.Activities
     public class MapActivity : AppCompatActivity
     {
 
+        private FloatingActionButton Centrar;
         private MapView mapView = new MapView();
         public Dictionary<string, Geometry> listGraphicsOverlay { get; set; }
         private FeatureLayer _featureLayer;
         private FeatureLayer featureLayerCableCoaxial;
-        //private FeatureLayer featureLayerAcoplador;
+        private FeatureLayer featureLayerAcoplador;
         private FeatureLayer featureLayerMDU;
         private FeatureLayer featureLayerNAP;
+        private FeatureLayer featureLayerSplitter;
+        private FeatureLayer featureLayerAmplificador;
         private double x;
         private double y;
         private int reference;
@@ -50,9 +54,15 @@ namespace une_etp.Activities
             SupportActionBar.SetDisplayShowHomeEnabled(true);
             Esri.ArcGISRuntime.ArcGISRuntimeEnvironment.SetLicense("runtimelite,1000,rud2018024756,none,3M2PMD17JYEFP2ELJ08");
             SetContentView(Resource.Layout.map);
+            Centrar = FindViewById<FloatingActionButton>(Resource.Id.Centrar);
+            Centrar.Click += Centrar_Click;
             BuildMapAsync();
         }
 
+        private async void Centrar_Click(object sender, EventArgs e)
+        {
+            await SetInitialPointAsync();
+        }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
         {
@@ -82,7 +92,9 @@ namespace une_etp.Activities
                 FillNap();
                 FillCableCoaxialAsync();
                 FillMDU();
-                //FillAcoplador();
+                FillAcoplador();
+                FillSplitter();
+                FillAmplificador();
                 await SetInitialPointAsync();
 
 
@@ -110,17 +122,17 @@ namespace une_etp.Activities
             }
         }
 
-        //private async void FillAcoplador()
-        //{
-        //    Uri Acoplador = new Uri("http://arcgis.etp.com.co:8399/arcgis/rest/services/sigetp/coaxial/FeatureServer/1");
-        //    var featureTableAcoplador = new ServiceFeatureTable(Acoplador);
-        //    featureLayerAcoplador = new FeatureLayer(featureTableAcoplador);
-        //    await featureTableAcoplador.LoadAsync();
-        //    if (featureLayerAcoplador.LoadStatus == Esri.ArcGISRuntime.LoadStatus.Loaded)
-        //    {
-        //        mapView.Map.OperationalLayers.Add(featureLayerAcoplador);
-        //    }
-        //}
+        private async void FillAcoplador()
+        {
+            Uri Acoplador = new Uri("http://arcgis.etp.com.co:8399/arcgis/rest/services/sigetp/coaxial/FeatureServer/1");
+            var featureTableAcoplador = new ServiceFeatureTable(Acoplador);
+            featureLayerAcoplador = new FeatureLayer(featureTableAcoplador);
+            await featureTableAcoplador.LoadAsync();
+            if (featureLayerAcoplador.LoadStatus == Esri.ArcGISRuntime.LoadStatus.Loaded)
+            {
+                mapView.Map.OperationalLayers.Add(featureLayerAcoplador);
+            }
+        }
 
         private async void FillMDU()
         {
@@ -146,6 +158,32 @@ namespace une_etp.Activities
                 mapView.Map.OperationalLayers.Add(featureLayerNAP);
             }
            
+        }
+
+        private async void FillSplitter()
+        {
+            Uri Splitter = new Uri("http://arcgis.etp.com.co:8399/arcgis/rest/services/sigetp/coaxial/FeatureServer/4");
+            var featureTableSplitter = new ServiceFeatureTable(Splitter);
+            featureLayerSplitter = new FeatureLayer(featureTableSplitter);
+            await featureLayerSplitter.LoadAsync();
+            if (featureLayerSplitter.LoadStatus == Esri.ArcGISRuntime.LoadStatus.Loaded)
+            {
+                mapView.Map.OperationalLayers.Add(featureLayerSplitter);
+            }
+
+        }
+
+        private async void FillAmplificador()
+        {
+            Uri Amplificador = new Uri("http://arcgis.etp.com.co:8399/arcgis/rest/services/sigetp/coaxial/FeatureServer/2");
+            var featureTableAmplificador = new ServiceFeatureTable(Amplificador);
+            featureLayerAmplificador = new FeatureLayer(featureTableAmplificador);
+            await featureLayerAmplificador.LoadAsync();
+            if (featureLayerAmplificador.LoadStatus == Esri.ArcGISRuntime.LoadStatus.Loaded)
+            {
+                mapView.Map.OperationalLayers.Add(featureLayerAmplificador);
+            }
+
         }
 
         private async Task SetInitialPointAsync()
@@ -217,6 +255,8 @@ namespace une_etp.Activities
                             Feature item = enumerator.Current;
                             MapPoint projectedLocation = (MapPoint)item.Geometry;
                             var tag = item.Attributes["TAG"];
+                            if(featureLayer == _featureLayer)
+                            { 
                             var intent = new Intent(this, typeof(ConsultarTap));
                             intent.PutExtra("codigoTag", tag.ToString());
                             intent.PutExtra("x", projectedLocation.X);
@@ -224,6 +264,13 @@ namespace une_etp.Activities
                             intent.PutExtra("reference", projectedLocation.SpatialReference.Wkid);
                             intent.PutExtra("tipo", tipo);
                             StartActivity(intent);
+                            }
+                            else if (featureLayer == featureLayerNAP)
+                            {
+                                var intent = new Intent(this, typeof(ConsultarNap));
+                                intent.PutExtra("codigoTag", tag.ToString());                         
+                                StartActivity(intent);
+                            }
                         }
                     }
                 }

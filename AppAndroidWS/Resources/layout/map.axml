@@ -1,9 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-	<Esri.ArcGISRuntime.UI.Controls.MapView android:id="@+id/mapa"
-		 android:layout_width ="fill_parent" android:layout_height="fill_parent" >
-		</Esri.ArcGISRuntime.UI.Controls.MapView>
-</LinearLayout>
+<?xml version="1.0" encoding="UTF-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent">
+   <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
+      <Esri.ArcGISRuntime.UI.Controls.MapView android:layout_width="fill_parent" android:layout_height="fill_parent" android:id="@+id/mapa" />
+      <android.support.design.widget.FloatingActionButton android:id="@+id/Centrar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:backgroundTint="#4CAF50" android:layout_marginLeft="30dp" android:layout_marginTop="20dp" android:src="@drawable/Icono_Ubicacion" />
+   </RelativeLayout>
+</FrameLayout>

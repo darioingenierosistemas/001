@@ -28,6 +28,8 @@ namespace une_etp.FragmentsActivities
         private ArrayAdapter<string> adapter;
         private ListView ListTapInfo;
         private List<string> lista;
+        private List<ConsultarCoTAP> NewCoTAP;
+        public  string IDCOTAP;
         private List<TapsInfoGet> NewTap;
         private Button btnActualizarTapConsulta;
         public static string IDTAP;
@@ -50,7 +52,9 @@ namespace une_etp.FragmentsActivities
             Sig = FindViewById<EditText>(Resource.Id.edtTapSIG);
             Button btnConsultarTap = FindViewById<Button>(Resource.Id.btnConsultarTap);
             btnActualizarTapConsulta = FindViewById<Button>(Resource.Id.btnActualizarTapConsulta);
-         
+            Button btnConsultarComercial = FindViewById<Button>(Resource.Id.btnConsultarComercial);
+
+            btnConsultarComercial.Click += BtnConsultarComercial_Click;
             btnConsultarTap.Click += BtnConsultarTap_Click;
 
             btnActualizarTapConsulta.Click += BtnActualizarTapConsulta_Click;
@@ -76,6 +80,111 @@ namespace une_etp.FragmentsActivities
             StartActivity(intent);
             return true;
         }
+
+
+        private async void BtnConsultarComercial_Click(object sender, EventArgs e)
+        {
+            mProgress = new ProgressDialog(this);
+            mProgress.SetCancelable(true);
+            mProgress.SetMessage("Consultando.....");
+            mProgress.SetProgressStyle(ProgressDialogStyle.Spinner);
+            mProgress.Progress = 0;
+            mProgress.Max = 100;
+
+            mProgress.Show();
+
+            NewCoTAP = new List<ConsultarCoTAP>();
+            ListTapInfo = FindViewById<ListView>(Resource.Id.ListTapInfo);
+
+            string url = "http://201.236.222.217:5154/API/etp_app/taps/OcupacionTap/?IdTap=" + tapByMap;
+
+            var ListaCopTAP = await url.GetRequest<List<ConsultarCoTAP>>();
+            NewCoTAP = ListaCopTAP;
+
+            lista = new List<string>();
+
+            if (NewCoTAP != null)
+            {
+
+                foreach (var data in NewCoTAP)
+                {
+                    if (!string.IsNullOrEmpty(data.BOCA.ToString()))
+                    {
+                        lista.Add("  Boca: " + data.BOCA.ToString());
+                    }
+                    else
+                    {
+                        lista.Add("  Boca: NO TIENE");
+                    }
+
+                    if (!string.IsNullOrEmpty(data.ESTADO))
+                    {
+                        lista.Add("  Estado: " + data.ESTADO.ToString());
+                    }
+                    else
+                    {
+                        lista.Add("  Estado: NO TIENE");
+                    }
+
+                    if (!string.IsNullOrEmpty(data.USUARIO))
+                    { 
+                        lista.Add("  Usuario: " + data.USUARIO.ToString());
+                    }
+                    else
+                    {
+                        lista.Add("  Usuario: NO TIENE");
+                    }
+
+                    if (!string.IsNullOrEmpty(data.DIRECCION))
+                    {
+                        lista.Add("  Direccion: " + data.DIRECCION.ToString());
+                    }
+                    else
+                    {
+                        lista.Add("  Direccion: NO TIENE");
+                    }
+
+                    if (!string.IsNullOrEmpty(data.PLAN))
+                    {
+                        lista.Add("  Plan: " + data.PLAN.ToString());
+                    }
+                    else
+                    {
+                        lista.Add("  Plan: NO TIENE");
+                    }
+                    lista.Add("");
+
+                }
+
+                adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.TestListItem, lista);
+                ListTapInfo.SetMinimumHeight(H);
+                ListTapInfo.Adapter = adapter;
+                ListTapInfo.SetMinimumHeight(3);
+                ListTapInfo.Visibility = 0;
+                btnActualizarTapConsulta.Visibility = 0;
+
+                mProgress.Dismiss();
+
+            }
+            else
+            {
+                mProgress.Dismiss();
+                Android.App.AlertDialog.Builder alertDiag = new Android.App.AlertDialog.Builder(this);
+                alertDiag.SetTitle("ERROR");
+                alertDiag.SetMessage("NO HAY INFORMACION COMERCIAL");
+                alertDiag.SetPositiveButton("OK", (senderAlert, args) =>
+                {
+                    //  StartActivity(typeof(ConsultarTap));
+                    //  SetContentView(Resource.Layout.Fragment_ConsultarTap);
+                });
+
+                Dialog diag = alertDiag.Create();
+                diag.Show();
+
+            }
+
+        }
+
 
         private void BtnActualizarTapConsulta_Click(object sender, EventArgs e)
         {
@@ -153,6 +262,8 @@ namespace une_etp.FragmentsActivities
 
         private async void GetTapInfoRESTSig()
         {
+            try
+            { 
             mProgress = new ProgressDialog(this);
             mProgress.SetCancelable(true);
             mProgress.SetMessage("Consultando.....");
@@ -179,20 +290,60 @@ namespace une_etp.FragmentsActivities
 
                     lista = new List<string>();
                     IDTAP = data.TAP.ToString();
-                    lista.Add("Identificador SIG: " + data.TAP.ToString());
-                    lista.Add("Codigo OSF: " + data.OSF.ToString());
-                    lista.Add("Dirección: " + data.DIRECCION.ToString());
-                    lista.Add("Atenuacion: " + data.ATENUACION.ToString());
-                    lista.Add("Numero de Bocas: " + data.NUMERO_BOCAS.ToString());
-                    lista.Add("Estado Operativo: " + data.ESTADO_OPERATIVO.ToString());
-                    lista.Add("Modelo: " + data.MODELO.ToString());
+                    lista.Add("  Identificador SIG: " + data.TAP.ToString());
+                    lista.Add("  Codigo OSF: " + data.OSF.ToString());
+
+                        if (data.DIRECCION != null)
+                        {
+                            lista.Add("  Dirección: " + data.DIRECCION.ToString());
+                        }
+                        else
+                        {
+                            lista.Add("  Dirección: NO TIENE");
+                        }
+
+                        if (!string.IsNullOrEmpty(data.ATENUACION.ToString()))
+                        {
+                            lista.Add("  Atenuacion: " + data.ATENUACION.ToString());
+                        }
+                        else
+                        {
+                            lista.Add("  Atenuacion: NO TIENE");
+                        }
+
+                        if (!string.IsNullOrEmpty(data.NUMERO_BOCAS))
+                        {
+                            lista.Add("  Numero de Bocas: " + data.NUMERO_BOCAS.ToString());
+                        }
+                        else
+                        {
+                            lista.Add("  Numero de Bocas: NO TIENE");
+                        }
+
+                        if (!string.IsNullOrEmpty(data.ESTADO_OPERATIVO.ToString()))
+                        {
+                            lista.Add("  Estado Operativo: " + data.ESTADO_OPERATIVO.ToString());
+                        }
+                        else
+                        {
+                            lista.Add("  Estado Operativo: NO TIENE");
+                        }
+
+                        if (!string.IsNullOrEmpty(data.MODELO))
+                        {
+                            lista.Add("  Modelo: " + data.MODELO.ToString());
+                        }
+                        else
+                        {
+                            lista.Add("  Modelo: NO TIENE");
+                        }
                     //if (data.FORWARD_ALTO == 0)
                     //{
                     //    lista.Add("Nivel de Salida ALTO: NO TIENE");
                     //}
                     //else
                     //{
-                    lista.Add("FORWARD ALTO: " + data.FORWARD_ALTO.ToString());
+                    lista.Add("  FORWARD ALTO: " + data.FORWARD_ALTO.ToString());
                     //}
 
                     //if (data.FORWARD_BAJO == 0)
@@ -201,41 +352,41 @@ namespace une_etp.FragmentsActivities
                     //    }
                     //    else
                     //    {
-                    lista.Add("FORWARD BAJO: " + data.FORWARD_BAJO.ToString());
+                    lista.Add("  FORWARD BAJO: " + data.FORWARD_BAJO.ToString());
                     //}
 
-                    lista.Add("REVERSE ALTO: " + data.REVERSE_ALTO);
+                    lista.Add("  REVERSE ALTO: " + data.REVERSE_ALTO);
 
-                    lista.Add("REVERSE BAJO: " + data.REVERSE_BAJO);
+                    lista.Add("  REVERSE BAJO: " + data.REVERSE_BAJO);
 
-                    lista.Add("FORWARD ALTO BOCA: " + data.FORWARD_ALTO_BOCA);
+                    lista.Add("  FORWARD ALTO BOCA: " + data.FORWARD_ALTO_BOCA);
 
-                    lista.Add("FORWARD BAJO BOCA: " + data.FORWARD_BAJO_BOCA);
+                    lista.Add("  FORWARD BAJO BOCA: " + data.FORWARD_BAJO_BOCA);
 
-                    lista.Add("REVERSE ALTO BOCA: " + data.REVERSE_ALTO_BOCA);
+                    lista.Add("  REVERSE ALTO BOCA: " + data.REVERSE_ALTO_BOCA);
 
-                    lista.Add("REVERSE BAJO BOCA: " + data.REVERSE_BAJO_BOCA);
+                    lista.Add("  REVERSE BAJO BOCA: " + data.REVERSE_BAJO_BOCA);
 
                     if (data.TIPO_PLUG_IN == null)
                     {
-                        lista.Add("Tipo de Plug IN: NO TIENE");
+                        lista.Add("  Tipo de Plug IN: NO TIENE");
                     }
                     else
                     {
-                        lista.Add("Tipo de Plug IN: " + data.TIPO_PLUG_IN.ToString());
+                        lista.Add("  Tipo de Plug IN: " + data.TIPO_PLUG_IN.ToString());
                     }
 
                     if (data.MODLEO_PLUG_IN == null)
                     {
-                        lista.Add("Modelo de Plug IN: NO TIENE");
+                        lista.Add("  Modelo de Plug IN: NO TIENE");
                     }
                     else
                     {
-                        lista.Add("Modelo de Plug IN: " + data.MODLEO_PLUG_IN.ToString());
+                        lista.Add("  Modelo de Plug IN: " + data.MODLEO_PLUG_IN.ToString());
                     }
                 }
 
-                adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleExpandableListItem1, lista);
+                adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.TestListItem, lista);
                 ListTapInfo.SetMinimumHeight(H);
                 ListTapInfo.Adapter = adapter;
                 ListTapInfo.SetMinimumHeight(3);
@@ -249,7 +400,7 @@ namespace une_etp.FragmentsActivities
                 mProgress.Dismiss();
                 Android.App.AlertDialog.Builder alertDiag = new Android.App.AlertDialog.Builder(this);
                 alertDiag.SetTitle("ERROR");
-                alertDiag.SetMessage("El INDENTIFICADOR SIG ingresado no es Valido");
+                alertDiag.SetMessage("NO TIENE INFORMACION TECNICA");
                 alertDiag.SetPositiveButton("OK", (senderAlert, args) => {
                   //  StartActivity(typeof(ConsultarTap));
                   //  SetContentView(Resource.Layout.Fragment_ConsultarTap);
@@ -259,107 +410,178 @@ namespace une_etp.FragmentsActivities
                 diag.Show();
 
             }
+            }
+            catch(Exception EX)
+            {
+                Android.App.AlertDialog.Builder alertDiag = new Android.App.AlertDialog.Builder(this);
+                alertDiag.SetTitle("ERROR");
+                alertDiag.SetMessage("ERROR");
+                alertDiag.SetPositiveButton("OK", (senderAlert, args) => {
+                    //    StartActivity(typeof(ConsultarTap));
+                    //  SetContentView(Resource.Layout.Fragment_ConsultarTap);
+                });
+
+                Dialog diag = alertDiag.Create();
+                diag.Show();
+            }
         }
 
         private async void GetTapInfoRESTOSF()
         {
-            mProgress = new ProgressDialog(this);
-            mProgress.SetCancelable(true);
-            mProgress.SetMessage("Consultando.....");
-            mProgress.SetProgressStyle(ProgressDialogStyle.Spinner);
-            mProgress.Progress = 0;
-            mProgress.Max = 100;
-
-            mProgress.Show();
-            btnActualizarTapConsulta = FindViewById<Button>(Resource.Id.btnActualizarTapConsulta);
-            ListTapInfo = FindViewById<ListView>(Resource.Id.ListTapInfo);
-            EditText OSF = FindViewById<EditText>(Resource.Id.edtTapOSF);
-            string url = "http://201.236.222.217:5154/API/etp_app/taps/BuscarOSF/";
-            string OSF2 = OSF.Text.ToString().ToUpper().Trim();
-            string URLSIG = url + "?CodigoOSF=" + OSF2;
-            var GetTapInfo = await URLSIG.GetRequest<List<TapsInfoGet>>();
-            NewTap = GetTapInfo;
-
-            if (NewTap != null)
+            try
             {
-                foreach (var data in NewTap)
+                mProgress = new ProgressDialog(this);
+                mProgress.SetCancelable(true);
+                mProgress.SetMessage("Consultando.....");
+                mProgress.SetProgressStyle(ProgressDialogStyle.Spinner);
+                mProgress.Progress = 0;
+                mProgress.Max = 100;
+
+                mProgress.Show();
+                btnActualizarTapConsulta = FindViewById<Button>(Resource.Id.btnActualizarTapConsulta);
+                ListTapInfo = FindViewById<ListView>(Resource.Id.ListTapInfo);
+                EditText OSF = FindViewById<EditText>(Resource.Id.edtTapOSF);
+                string url = "http://201.236.222.217:5154/API/etp_app/taps/BuscarOSF/";
+                string OSF2 = OSF.Text.ToString().ToUpper().Trim();
+                string URLSIG = url + "?CodigoOSF=" + OSF2;
+                var GetTapInfo = await URLSIG.GetRequest<List<TapsInfoGet>>();
+                NewTap = GetTapInfo;
+
+                if (NewTap != null)
                 {
-
-                    lista = new List<string>();
-                    IDTAP = data.TAP.ToString();
-                    lista.Add("Identificador SIG: " + data.TAP.ToString());
-                    lista.Add("Codigo OSF: " + data.OSF.ToString());
-                    lista.Add("Dirección: " + data.DIRECCION.ToString());
-                    lista.Add("Atenuacion: " + data.ATENUACION.ToString());
-                    lista.Add("Numero de Bocas: " + data.NUMERO_BOCAS.ToString());
-                    lista.Add("Estado Operativo: " + data.ESTADO_OPERATIVO.ToString());
-                    lista.Add("Modelo: " + data.MODELO.ToString());
-
-                    //if (data.FORWARD_ALTO == 0)
-                    //{
-                    //    lista.Add("Nivel de Salida ALTO: NO TIENE");
-                    //}
-                    //else
-                    //{
-                    lista.Add("ENT FORWARD ALTO: " + data.FORWARD_ALTO.ToString());
-                //}
-
-                //if (data.FORWARD_BAJO == 0)
-                //    {
-                //        lista.Add("Nivel de Salida BAJO: NO TIENE");
-                //    }
-                //    else
-                //    {
-                        lista.Add("ENT FORWARD BAJO: " + data.FORWARD_BAJO.ToString());
-                    //}
-
-                    lista.Add("REVERSE ALTO: "+data.REVERSE_ALTO);
-
-                    lista.Add("REVERSE BAJO: " + data.REVERSE_BAJO);
-
-                    lista.Add("FORWARD ALTO BOCA: " + data.FORWARD_ALTO_BOCA);
-
-                    lista.Add("FORWARD BAJO BOCA: "+data.FORWARD_BAJO_BOCA);
-
-                    lista.Add("REVERSE ALTO BOCA: "+data.REVERSE_ALTO_BOCA);
-
-                    lista.Add("REVERSE BAJO BOCA: "+data.REVERSE_BAJO_BOCA);
-
-                    if (data.TIPO_PLUG_IN == null)
+                    foreach (var data in NewTap)
                     {
-                        lista.Add("Tipo de Plug IN: NO TIENE");
-                    }
-                    else
-                    {
-                        lista.Add("Tipo de Plug IN: " + data.TIPO_PLUG_IN.ToString());
+
+                        lista = new List<string>();
+                        IDTAP = data.TAP.ToString();
+                        lista.Add("  Identificador SIG: " + data.TAP.ToString());
+                        lista.Add("  Codigo OSF: " + data.OSF.ToString());
+
+                        if (data.DIRECCION != null)
+                        {
+                            lista.Add("  Dirección: " + data.DIRECCION.ToString());
+                        }
+                        else
+                        {
+                            lista.Add("  Dirección: NO TIENE");
+                        }
+
+                        if (!string.IsNullOrEmpty(data.ATENUACION.ToString()))
+                        {
+                            lista.Add("  Atenuacion: " + data.ATENUACION.ToString());
+                        }
+                        else
+                        {
+                            lista.Add("  Atenuacion: NO TIENE");
+                        }
+
+                        if (!string.IsNullOrEmpty(data.NUMERO_BOCAS))
+                        {
+                            lista.Add("  Numero de Bocas: " + data.NUMERO_BOCAS.ToString());
+                        }
+                        else
+                        {
+                            lista.Add("  Numero de Bocas: NO TIENE");
+                        }
+
+                        if (!string.IsNullOrEmpty(data.ESTADO_OPERATIVO.ToString()))
+                        {
+                            lista.Add("  Estado Operativo: " + data.ESTADO_OPERATIVO.ToString());
+                        }
+                        else
+                        {
+                            lista.Add("  Estado Operativo: NO TIENE");
+                        }
+
+                        if (!string.IsNullOrEmpty(data.MODELO))
+                        {
+                            lista.Add("  Modelo: " + data.MODELO.ToString());
+                        }
+                        else
+                        {
+                            lista.Add("  Modelo: NO TIENE");
+                        }
+
+                        //if (data.FORWARD_ALTO == 0)
+                        //{
+                        //    lista.Add("Nivel de Salida ALTO: NO TIENE");
+                        //}
+                        //else
+                        //{
+                        lista.Add("  ENT FORWARD ALTO: " + data.FORWARD_ALTO.ToString());
+                        //}
+
+                        //if (data.FORWARD_BAJO == 0)
+                        //    {
+                        //        lista.Add("Nivel de Salida BAJO: NO TIENE");
+                        //    }
+                        //    else
+                        //    {
+                        lista.Add("  ENT FORWARD BAJO: " + data.FORWARD_BAJO.ToString());
+                        //}
+
+                        lista.Add("  REVERSE ALTO: " + data.REVERSE_ALTO);
+
+                        lista.Add("  REVERSE BAJO: " + data.REVERSE_BAJO);
+
+                        lista.Add("  FORWARD ALTO BOCA: " + data.FORWARD_ALTO_BOCA);
+
+                        lista.Add("  FORWARD BAJO BOCA: " + data.FORWARD_BAJO_BOCA);
+
+                        lista.Add("  REVERSE ALTO BOCA: " + data.REVERSE_ALTO_BOCA);
+
+                        lista.Add("  REVERSE BAJO BOCA: " + data.REVERSE_BAJO_BOCA);
+
+                        if (data.TIPO_PLUG_IN == null)
+                        {
+                            lista.Add("  Tipo de Plug IN: NO TIENE");
+                        }
+                        else
+                        {
+                            lista.Add("  Tipo de Plug IN: " + data.TIPO_PLUG_IN.ToString());
+                        }
+
+                        if (data.MODLEO_PLUG_IN == null)
+                        {
+                            lista.Add("  Modelo de Plug IN: NO TIENE");
+                        }
+                        else
+                        {
+                            lista.Add("  Modelo de Plug IN: " + data.MODLEO_PLUG_IN.ToString());
+                        }
                     }
 
-                    if (data.MODLEO_PLUG_IN == null)
-                    {
-                        lista.Add("Modelo de Plug IN: NO TIENE");
-                    }
-                    else
-                    {
-                        lista.Add("Modelo de Plug IN: " + data.MODLEO_PLUG_IN.ToString());
-                    }
+                    adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.TestListItem, lista);
+                    ListTapInfo.Adapter = adapter;
+                    btnActualizarTapConsulta.Visibility = 0;
+                    btnActualizarTapConsulta.Enabled = true;
+
+                    mProgress.Dismiss();
                 }
+                else
+                {
+                    mProgress.Dismiss();
+                    Android.App.AlertDialog.Builder alertDiag = new Android.App.AlertDialog.Builder(this);
+                    alertDiag.SetTitle("ERROR");
+                    alertDiag.SetMessage("NO TIENE INFORMACION TECNICA");
+                    alertDiag.SetPositiveButton("OK", (senderAlert, args) =>
+                    {
+                        //    StartActivity(typeof(ConsultarTap));
+                        //  SetContentView(Resource.Layout.Fragment_ConsultarTap);
+                    });
 
-                adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleExpandableListItem1, lista);
-                ListTapInfo.Adapter = adapter;
-                btnActualizarTapConsulta.Visibility = 0;
-                btnActualizarTapConsulta.Enabled = true;
-
-                mProgress.Dismiss();
+                    Dialog diag = alertDiag.Create();
+                    diag.Show();
+                }
             }
-            else
+            catch (Exception EX)
             {
-                mProgress.Dismiss();
                 Android.App.AlertDialog.Builder alertDiag = new Android.App.AlertDialog.Builder(this);
                 alertDiag.SetTitle("ERROR");
-                alertDiag.SetMessage("El CODIGO OSF ingresado no es Valido");
+                alertDiag.SetMessage("ERROR");
                 alertDiag.SetPositiveButton("OK", (senderAlert, args) => {
-                //    StartActivity(typeof(ConsultarTap));
-                  //  SetContentView(Resource.Layout.Fragment_ConsultarTap);
+                    //    StartActivity(typeof(ConsultarTap));
+                    //  SetContentView(Resource.Layout.Fragment_ConsultarTap);
                 });
 
                 Dialog diag = alertDiag.Create();

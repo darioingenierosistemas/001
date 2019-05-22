@@ -4,6 +4,7 @@ using Android.Support.V7.App;
 using System.Linq;
 using Android.Runtime;
 using Android.Widget;
+using Android.Text;
 using Android.Content;
 using System.Collections.Generic;
 using une_etp.TapsFM;
@@ -30,9 +31,28 @@ namespace une_etp.FragmentsActivities
 
             Button btnLogin = FindViewById<Button>(Resource.Id.btnLogin);
             Button btnSincronizar = FindViewById<Button>(Resource.Id.btnSincronizar);
+            CheckBox chkMostar = FindViewById<CheckBox>(Resource.Id.chkMostrar);
             btnSincronizar.Click += BtnSincronizar_Click1;
             btnLogin.Click += BtnLogin_Click;
+            chkMostar.CheckedChange += ChkMostar_CheckedChange;
 
+        }
+
+        private void ChkMostar_CheckedChange(object sender, CompoundButton.CheckedChangeEventArgs e)
+        {
+            CheckBox chkMostar = FindViewById<CheckBox>(Resource.Id.chkMostrar);
+            EditText edtPass = FindViewById<EditText>(Resource.Id.edtPass);
+
+            if (chkMostar.Checked == true)
+            {
+                edtPass.InputType = InputTypes.TextVariationVisiblePassword;
+            }
+            else if (chkMostar.Checked == false)
+            {
+
+                edtPass.InputType = InputTypes.TextVariationPassword | InputTypes.ClassText;
+            }
+            edtPass.RequestFocus();
         }
 
         private void BtnSincronizar_Click1(object sender, System.EventArgs e)
@@ -113,7 +133,7 @@ namespace une_etp.FragmentsActivities
                 {
                     mProgress.Dismiss();
                     AlertDialog.Builder alertDiag = new AlertDialog.Builder(this);
-                    alertDiag.SetTitle("INICIO DE SESION");
+                    alertDiag.SetTitle("ERROR!");
                     alertDiag.SetMessage("Usuario o Constraseña invalida");
                     alertDiag.SetPositiveButton("OK", (senderAlert, args) =>
                     {

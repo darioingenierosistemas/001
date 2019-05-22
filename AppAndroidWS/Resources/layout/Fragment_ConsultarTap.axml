@@ -21,7 +21,7 @@
 					android:textColor ="@android:color/black"
 					android:background="@drawable/back"
 					android:layout_width="fill_parent"
-					android:layout_height="45dp"
+					android:layout_height="38dp"
 					android:padding="5dp"
 					android:layout_marginTop="10dp" />
 
@@ -31,27 +31,39 @@
 					android:textColor ="@android:color/black"
 					android:background="@drawable/back"
 					android:layout_width="fill_parent"
-					android:layout_height="45dp"
+					android:layout_height="38dp"
 					android:padding="5dp"
 					android:layout_marginTop="10dp" />
 
 					<Button
 					android:id="@+id/btnConsultarTap"
-					android:text="CONSULTAR TAP" 
+					android:text="CONSULTAR TECNICA TAP" 
 					android:layout_width="match_parent"
 					android:background="@color/colorPrimary"
 					android:textColor="@android:color/white"
-					android:layout_height="60dp"
+					android:layout_height="38dp"
 					android:padding="5dp"
 					android:layout_marginTop="10dp"
 					android:layout_gravity="right" />
+					
+					 <Button
+                    android:id="@+id/btnConsultarComercial"
+                    android:text="CONSULTAR COMERCIAL TAP" 
+                    android:layout_width="match_parent"
+                    android:background="@color/colorPrimary"
+                    android:textColor="@android:color/white"
+                    android:layout_height="38dp"
+                    android:padding="5dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="right"                     
+                    android:layout_marginBottom="10dp"/>
 					
 					<ListView
 					android:minWidth="4px"
 					android:minHeight="4px"
 			        android:padding="5dp"
 					android:layout_width="match_parent"
-					android:layout_height ="310dp"
+					android:layout_height ="300dp"
 					android:background="@color/material_grey_50"
 					android:id="@+id/ListTapInfo"
 					android:visibility="invisible"
@@ -63,7 +75,7 @@
 					android:layout_width="match_parent"
 					android:background="@color/error_color_material"
 					android:textColor="@android:color/white"
-					android:layout_height="45dp"
+					android:layout_height="40dp"
 					android:padding="5dp"
 					android:layout_gravity="right"
 			        android:enabled="false"

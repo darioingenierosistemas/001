@@ -43,6 +43,16 @@
         android:padding="5dp"
 	    android:layout_marginTop="10dp" />
 
+		<CheckBox 
+		 android:id="@+id/chkMostrar"
+	     android:text="MOSTRAR CONTRASEÑA"
+		 android:layout_width="match_parent"
+         android:layout_height="45dp"
+		 android:layout_marginTop="20dp"
+         android:layout_gravity="right" 
+		/>
+
+
 		<Button
 		android:id="@+id/btnLogin"
 		android:text="LOGIN" 
